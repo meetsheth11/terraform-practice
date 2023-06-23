@@ -23,7 +23,7 @@ resource "aws_instance" "meet_node" {
   }
 
   key_name               = aws_key_pair.meet_auth.id
-  vpc_security_group_ids = [var.public_sg]
+  vpc_security_group_ids = [var.meet_public_sg]
   subnet_id              = var.public_subnets[0]
   user_data              = templatefile("userdata.tpl",{})
 

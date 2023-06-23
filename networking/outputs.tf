@@ -6,6 +6,6 @@ output "public_subnets" {
   value = aws_subnet.meetsheth_public.*.id
 }
 
-output "public_sg" {
-  value = aws_security_group.mtc_sg["public"].id
+output "meet_public_sg" {
+  value = aws_security_group.meet_public_sg["public"].id
 }

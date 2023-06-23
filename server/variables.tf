@@ -1,3 +1,3 @@
 variable "vol_size" {}
 variable "public_subnets" {}
-variable "public_sg" {}
+variable "meet_public_sg" {}
