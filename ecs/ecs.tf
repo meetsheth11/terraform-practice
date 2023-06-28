@@ -27,8 +27,8 @@ resource "aws_ecs_task_definition" "task-definition" {
       essential = true
       portMappings = [
         {
-          containerPort = 8080
-          hostPort      = 8080
+          containerPort = 80
+          hostPort      = 80
         }
       ]
       cpu : 256,
@@ -69,7 +69,7 @@ resource "aws_ecs_service" "aws-ecs-service" {
   load_balancer {
     target_group_arn = var.aws_lb_target_group.arn
     container_name   = "meet-nginx-ecs-container"
-    container_port   = 8080
+    container_port   = 80
   }
 
   depends_on = [aws_lb_listener.mtc_lb_listener]

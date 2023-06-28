@@ -14,7 +14,7 @@ module "loadbalancing" {
   source                  = "./loadbalancing"
   public_sg               = module.networking.meet_public_sg
   public_subnets          = module.networking.public_subnets
-  tg_port                 = 8000
+  tg_port                 = 80
   tg_protocol             = "HTTP"
   vpc_id                  = module.networking.vpc_id
   elb_healthy_threshold   = 10
