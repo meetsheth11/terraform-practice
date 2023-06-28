@@ -5,23 +5,37 @@ resource "aws_vpc" "meet_sheth_vpc" {
   }
 }
 
+data "aws_availability_zones" "available" {}
+
+resource "random_integer" "random" {
+  min = 1
+  max = 100
+}
+
+resource "random_shuffle" "public_az" {
+  input        = data.aws_availability_zones.available.names
+  result_count = var.max_subnets
+}
+
 resource "aws_subnet" "meetsheth_public" {
+count   = 2
     vpc_id = aws_vpc.meet_sheth_vpc.id
-    cidr_block = "10.123.2.0/24"
-    availability_zone = "us-west-2a"
+    cidr_block = var.public_cidrs[count.index]
+    availability_zone       = random_shuffle.public_az.result[count.index]
     map_public_ip_on_launch = true
     tags = {
-        Name = "meetsheth_public"
+        Name = "meetsheth_public_${count.index + 1}"
     }
 }
 
 resource "aws_subnet" "meetsheth_private" {
+count = 2
     vpc_id = aws_vpc.meet_sheth_vpc.id
-    cidr_block = "10.123.3.0/24"
-    availability_zone = "us-west-2a"
+    cidr_block = var.private_cidrs[count.index]
+    availability_zone = random_shuffle.public_az.result[count.index]
     map_public_ip_on_launch = false
     tags = {
-        Name = "meetsheth_private"
+        Name = "meetsheth_private_${count.index + 1}"
     }
 }
 
@@ -57,7 +71,8 @@ resource "aws_default_route_table" "meet_private_rt" {
 }
 
 resource "aws_route_table_association" "mtc_public_assoc" {
-  subnet_id      = aws_subnet.meetsheth_public.id
+count = 2
+  subnet_id      = aws_subnet.meetsheth_public.*.id[count.index]
   route_table_id = aws_route_table.meet_public_rt.id
 }
 
